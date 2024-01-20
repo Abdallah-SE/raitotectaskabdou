@@ -300,6 +300,20 @@
                         icon: "success",
                         button: "OK",
                     });
+                },
+                error: function(response) {
+                    let errors = response.responseJSON;
+                    let errorString = '';
+
+                    $.each(errors, function(key, value) {
+                        errorString += value + '\n';
+                    });
+                    swal({
+                        title: "Error!",
+                        text: errorString,
+                        icon: "error",
+                        button: "OK",
+                    });
                 }
             });
         });

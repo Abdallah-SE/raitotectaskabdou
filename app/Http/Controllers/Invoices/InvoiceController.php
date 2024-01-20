@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Models\Invoices\InvoiceItem;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 
 // use Yajra\DataTables\Facades\DataTables;
 
@@ -31,6 +34,19 @@ class InvoiceController extends Controller
 
     protected function store(Request $request)
     {
+        $rules = [
+            'userid' => 'required',
+            'date' => 'required|date',
+            'data' => 'required',
+            // Add more validation rules as needed...
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
         try {
             DB::beginTransaction();
 
@@ -38,7 +54,7 @@ class InvoiceController extends Controller
             $invoice = Invoice::create([
                 'user_id' => $request->input('userid'),
                 'created_at' => $request->input('date'),
-                
+
             ]);
 
             foreach ($data as $item) {
