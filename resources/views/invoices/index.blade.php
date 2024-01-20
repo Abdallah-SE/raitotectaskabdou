@@ -285,6 +285,42 @@
 
         $('#submitButton').click(function() {
             let data = collectData();
+            // Check if date is not set or null
+            if (!$('.date').val()) {
+                swal({
+                    title: "Oops!",
+                    text: "Date is required.",
+                    icon: "error",
+                    button: "OK",
+                });
+                return false;
+            }
+            // Check if username is not set or null
+            if (!$('.username').val()) {
+
+                swal({
+                    title: "Oops!",
+                    text: "Username is required.",
+                    icon: "error",
+                    button: "OK",
+                });
+                return false;
+            }
+
+
+            // Check if data is empty
+            if (!data || !data.length) {
+
+                swal({
+                    title: "Oops!",
+                    text: "Item is required.",
+                    icon: "error",
+                    button: "OK",
+                });
+                return false;
+            }
+
+
             $.ajax({
                 url: "{{ route('invoices.store') }}",
                 method: 'POST',
@@ -294,12 +330,21 @@
                     'date': $('.date').val()
                 },
                 success: function(response) {
-                    swal({
+                    let sw = swal({
                         title: "Success!",
                         text: "Data stored successfully!",
                         icon: "success",
                         button: "OK",
                     });
+                    sw.then((result) => {
+                        if (result == true) {
+                            window.location.reload();
+                        }
+                    }).catch((error) => {
+                        console.error(error);
+                    });
+
+
                 },
                 error: function(response) {
                     let errors = response.responseJSON;
