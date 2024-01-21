@@ -31,6 +31,6 @@ class LanguageService
     public function getLangId()
     {
         $language = Language::where('code', app()->getLocale())->first();
-        return $language->id;
+        return $language?->id ?? null;
     }
 }

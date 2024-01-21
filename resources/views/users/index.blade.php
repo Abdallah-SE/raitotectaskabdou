@@ -28,7 +28,12 @@
                     data: 'name',
                     name: 'users_translations.name'
                 }
-            ]
+            ], error: function(jqXHR, textStatus, errorThrown) {
+            // Clear the table
+            table.clear().draw();
+            // Hide the error message
+            $.fn.dataTable.ext.errMode = 'throw';
+        }
 
         });
     });
