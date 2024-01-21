@@ -37,20 +37,22 @@ class InvoiceController extends Controller
         $rules = [
             'userid' => 'required',
             'date' => 'required|date',
-            'data' => 'required',
+            'data' => 'required|array',
+            'data.*.id' => 'required|exists:items,id', // assuming items is the table name
+            'data.*.quantity' => 'required|gt:0',
             // Add more validation rules as needed...
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
-        if ($validator->fails()) {
+         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
         try {
             DB::beginTransaction();
 
-            $data = json_decode($request->input('data'), true);
+            $data =  ($request->input('data')   );
             $invoice = Invoice::create([
                 'user_id' => $request->input('userid'),
                 'created_at' => $request->input('date'),

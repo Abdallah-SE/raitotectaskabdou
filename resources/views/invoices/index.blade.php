@@ -4,29 +4,39 @@
 @endpush
 @section('title', 'Create Invoice')
 @section('content')
-    <div class="jumbotron">
-        <div class="container ">
+    <div class="container   d-flex  m-5">
+        <div class="row ">
 
-            <div class="col-md-4">
-                <input type="text" class="datepicker date" name="date" id="date">
+            <div class="col-sm-12 col-md-6">
+                <div class="form-group">
+                    <label class="d-block">Select date</label>
+
+                    <input type="text" class="datepicker date" name="date" id="date">
+                </div>
+
 
             </div>
 
-            <div class="col-md-4">
-                <label>Select customer name</label>
-                <select id="username" class="username form-control">
+            <div class="col-sm-12 col-md-6">
+                <div class="form-group">
+                    <label>Select customer name</label>
+                    <select id="username" class="username form-control">
 
-                </select>
+                    </select>
+                </div>
             </div>
-            <div class="col-md-4">
-                <label>Select items</label>
-                <select id="multipleitems" class="multipleitems form-control" multiple>
 
-                </select>
+
+
+            <div class="col-sm-12 col-md-6">
+                <div class="form-group">
+                    <label>Select items</label>
+                    <select id="multipleitems" class="multipleitems form-control" multiple>
+
+                    </select>
+                </div>
             </div>
-        </div>
-        <div class="container ">
-            <div class="col-md-6">
+            <div class="col-sm-12 col-md-6">
                 <table class="table itemsTable" id="itemsTable">
                     <thead>
                         <tr>
@@ -39,7 +49,10 @@
                     </thead>
                 </table>
             </div>
-            <div class="col-md-6">
+
+
+
+            <div class="col-sm-12 col-md-6">
                 <table class="table">
                     <thead>
                         <tr>
@@ -49,18 +62,20 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <th scope="row">1</th>
-                            <td><span id="finaltotal"></span></td>
+                            <th scope="row"></th>
+                            <td><span id="finaltotal">0.00</span></td>
                         </tr>
 
 
                     </tbody>
                 </table>
             </div>
-        </div>
-        <div class="container">
-            <button class="btn btn-info" id="submitButton" type="button">Submit</button>
 
+            <div class="col-sm-12  col-md-6 d-flex m-5">
+                <div></div>
+                <button class="btn btn-info" id="submitButton" type="button">Submit</button>
+
+            </div>
         </div>
     </div>
 @endsection
@@ -172,7 +187,7 @@
                         }
 
                         let quantityInput =
-                            `<input type="number" class="quantity" min="1" value="1"  data-id='${item.id}' data-price='${item.price}'>`;
+                            `<input type="number" class="quantity"  min="1" step="1" value="1"  data-id='${item.id}' data-price='${item.price}'>`;
                         let subtotalSpan =
                             `<span class='subtotal' data-id='${item.id}' data-price='${item.price}'>` +
                             item.price + "</span>";
@@ -325,7 +340,8 @@
                 url: "{{ route('invoices.store') }}",
                 method: 'POST',
                 data: {
-                    data: JSON.stringify(data),
+                    // data: JSON.stringify(data),
+                    data:   (data),
                     'userid': $('.username').val(),
                     'date': $('.date').val()
                 },
@@ -375,7 +391,7 @@
 
             // Create a new quantity input field with the updated value
             let quantityInput =
-                `<input type="number" class="quantity" min="1" value="${quantity}" data-id="${itemid}" data-price="${price}">`;
+                `<input type="number" class="quantity"  min="1" step="1"  value="${quantity}" data-id="${itemid}" data-price="${price}">`;
 
             // Update the cell in the DataTable
             table.cell(row, 2).data(quantityInput).draw();
