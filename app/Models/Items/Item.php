@@ -9,7 +9,7 @@ class Item   extends Model
 {
     protected $table = "items";
 
-
+    public $timestamps = true;
 
     public function translations()
     {

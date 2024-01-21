@@ -8,17 +8,17 @@
         <div class="row ">
 
             <div class="col-sm-12 col-md-6">
-                <div class="form-group">
+                <div class="form-group mb-5 mr-5">
                     <label class="d-block">Select date</label>
 
-                    <input type="text" class="datepicker date" name="date" id="date">
+                    <input type="text" class="datepicker date form-control" name="date" id="date">
                 </div>
 
 
             </div>
 
             <div class="col-sm-12 col-md-6">
-                <div class="form-group">
+                <div class="form-group mb-5">
                     <label>Select customer name</label>
                     <select id="username" class="username form-control">
 
@@ -84,13 +84,7 @@
 @push('js')
     <script>
         $(document).ready(function() {
-            $('.datepicker').datepicker({
-                format: 'yyyy-mm-dd'
-            });
-        });
-
-
-        $(document).ready(function() {
+            // Load users by select2
             $('.username').select2({
                 placeholder: "Select a customer name",
                 allowClear: true,
@@ -115,7 +109,7 @@
 
                 }
             });
-
+            // Load items by select2
             $('.multipleitems').select2({
                 placeholder: "Select one or more item",
                 allowClear: true,
@@ -141,97 +135,95 @@
 
                 }
             });
-        });
+            // Load datepicker date
+            $('.datepicker').datepicker({
+                format: 'yyyy-mm-dd'
+            });
 
-        // Initialize the DataTable
-        let table = $('#itemsTable').DataTable({
-            paging: false,
-            searching: false
-        });
-        // Set up AJAX defaults
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        // Listen for changes on the Select2 element
-        // Keep track of the IDs of the rows that are currently in the table
-        let currentRowIds = [];
+            // Initialize the Items DataTable
+            const table = $('#itemsTable').DataTable({
+                paging: false,
+                searching: false
+            });
+            // Set up AJAX defaults
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            // Listen for changes on the Select2 element
+            // Keep track of the IDs of the rows that are currently in the table
+            let currentRowIds = [];
 
-        $('#multipleitems').on('change', function(e) {
+            $('#multipleitems').on('change', function(e) {
 
-            let selectedItems = $(this).val(); // Get all currently selected IDs
-
-
-            // Send an AJAX request to the server with the selected items
-            $.ajax({
-                url: "{{ route('invoices.items.selected') }}",
-                method: 'POST',
-                data: {
-                    ids: selectedItems
-                },
-                success: function(response) {
-                    // Clear the DataTable
-                    // table.clear().draw();
-                    // Check if the response is empty
+                let selectedItems = $(this).val(); // Get all currently selected IDs
 
 
-                    if (response.length === 0) {
-                        // Handle the empty response here
-                        return;
-                    }
-                    // Load the new data into the DataTable
-                    response.forEach(function(item) {
-                        if (currentRowIds.includes(item.id)) {
+                // Send an AJAX request to the server with the selected items
+                $.ajax({
+                    url: "{{ route('invoices.items.selected') }}",
+                    method: 'POST',
+                    data: {
+                        ids: selectedItems
+                    },
+                    success: function(response) {
+
+                        if (response.length === 0) {
+                            // Handle the empty response here
                             return;
                         }
+                        // Load the new data into the DataTable
+                        response.forEach(function(item) {
+                            if (currentRowIds.includes(item.id)) {
+                                return;
+                            }
 
-                        let quantityInput =
-                            `<input type="number" class="quantity"  min="1" step="1" value="1"  data-id='${item.id}' data-price='${item.price}'>`;
-                        let subtotalSpan =
-                            `<span class='subtotal' data-id='${item.id}' data-price='${item.price}'>` +
-                            item.price + "</span>";
-                        table.row.add([
-                            item.id,
-                            item.translations[0]['name'],
-                            quantityInput,
-                            item.price,
-                            subtotalSpan
-                        ]).draw();
+                            let quantityInput =
+                                `<input type="number" class="quantity"  min="1" step="1" value="1"  data-id='${item.id}' data-price='${item.price}'>`;
+                            let subtotalSpan =
+                                `<span class='subtotal' data-id='${item.id}' data-price='${item.price}'>` +
+                                item.price + "</span>";
+                            table.row.add([
+                                item.id,
+                                item.translations[0]['name'],
+                                quantityInput,
+                                item.price,
+                                subtotalSpan
+                            ]).draw();
 
-                        // Add the ID of the row to the list of current row IDs
-                        currentRowIds.push(item.id);
-                        updateFinalTotal();
-                    });
+                            // Add the ID of the row to the list of current row IDs
+                            currentRowIds.push(item.id);
+                            updateFinalTotal();
+                        });
 
 
-                }
-            });
-        }).on('select2:unselect', function(e) {
-            // Remove the corresponding row from the DataTable
-            let unselectedId = e.params.data.id;
-            table.rows().every(function(rowIdx, tableLoop, rowLoop) {
-                let data = this.data();
+                    }
+                });
+            }).on('select2:unselect', function(e) {
+                // Remove the corresponding row from the DataTable
+                let unselectedId = e.params.data.id;
+                table.rows().every(function(rowIdx, tableLoop, rowLoop) {
+                    let data = this.data();
 
-                if (data[0] == unselectedId) {
+                    if (data[0] == unselectedId) {
 
-                    table.row(rowIdx).remove().draw();
+                        table.row(rowIdx).remove().draw();
 
-                }
-                let unselectedIdNum = Number(unselectedId);
+                    }
+                    let unselectedIdNum = Number(unselectedId);
 
-                const index = currentRowIds.findIndex(id => id === unselectedIdNum);
+                    const index = currentRowIds.findIndex(id => id === unselectedIdNum);
 
-                if (index > -1) {
-                    currentRowIds.splice(index, 1);
-                }
-                updateFinalTotal();
-            });
-        });;
+                    if (index > -1) {
+                        currentRowIds.splice(index, 1);
+                    }
+                    updateFinalTotal();
+                });
+            });;
 
-        $(document).ready(function() {
-            // Attach an event listener to the parent element of the table
-            $('#itemsTable').on('change', '.quantity', function() {
+
+            function updateSubTotal() {
                 // Calculate the new subtotal
                 let quantity = parseInt($(this).val());
                 let price = parseFloat($(this).closest('tr').find('.subtotal').data('price'));
@@ -241,173 +233,207 @@
                 $(this).closest('tr').find('.subtotal').text(subtotal);
                 // Then update the final total
                 updateFinalTotal();
-            });
-        });
+            }
 
-        function updateFinalTotal() {
-            let total = 0;
-            $('.subtotal').each(function() {
-                let subtotal = parseFloat($(this).text());
-                if (!isNaN(subtotal)) {
-                    total += subtotal;
+            function updateFinalTotal() {
+                let total = 0;
+                $('.subtotal').each(function() {
+                    let subtotal = parseFloat($(this).text());
+                    if (!isNaN(subtotal)) {
+                        total += subtotal;
+                    }
+                });
+                $('#finaltotal').text(total.toFixed(2));
+            }
+
+            function collectData() {
+                let data = [];
+
+                // Check if the table is empty
+                if (table.data().length == 0) {
+                    // Table is empty, return an empty array
+                    return data;
                 }
-            });
-            $('#finaltotal').text(total.toFixed(2));
-        }
 
-        function collectData() {
-            let data = [];
+                // Iterate over each row in the DataTable using the 'rows()' method
+                table.rows().every(function() {
+                    let rowData = this.data();
+                    let id = rowData[0]; // Assuming the ID is in the first column of the row
 
-            // Check if the table is empty
-            if (table.data().length == 0) {
-                // Table is empty, return an empty array
-                return data;
-            }
+                    // Create a temporary DOM element to hold the HTML string
+                    let tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = rowData[
+                        2]; // Assuming the quantity is in the third column of the row
 
-            // Iterate over each row in the DataTable using the 'rows()' method
-            table.rows().every(function() {
-                let rowData = this.data();
-                console.log(rowData); // Log the row data to debug
+                    // Extract the value attribute from the input field
+                    let quantityString = tempDiv.querySelector('.quantity').value;
 
-                let id = rowData[0]; // Assuming the ID is in the first column of the row
+                    let quantity = parseInt(quantityString); // Parse the quantity string to an integer
 
-                // Create a temporary DOM element to hold the HTML string
-                let tempDiv = document.createElement('div');
-                tempDiv.innerHTML = rowData[2]; // Assuming the quantity is in the third column of the row
-
-                // Extract the value attribute from the input field
-                let quantityString = tempDiv.querySelector('.quantity').value;
-                console.log(quantityString); // Log the quantity string to debug
-
-                let quantity = parseInt(quantityString); // Parse the quantity string to an integer
-                console.log(quantity); // Log the parsed quantity to debug
-                let quantityInput = $(this).find('.quantity');
-
-                // Push the ID and quantity as an object to the 'data' array
-                data.push({
-                    id: id,
-                    quantity: quantity
-                });
-
-                return true; // Continue iteration to the next row
-            });
-
-            return data; // Return the collected data array
-        }
-
-
-
-
-        $('#submitButton').click(function() {
-            let data = collectData();
-            // Check if date is not set or null
-            if (!$('.date').val()) {
-                swal({
-                    title: "Oops!",
-                    text: "Date is required.",
-                    icon: "error",
-                    button: "OK",
-                });
-                return false;
-            }
-            // Check if username is not set or null
-            if (!$('.username').val()) {
-
-                swal({
-                    title: "Oops!",
-                    text: "Username is required.",
-                    icon: "error",
-                    button: "OK",
-                });
-                return false;
-            }
-
-
-            // Check if data is empty
-            if (!data || !data.length) {
-
-                swal({
-                    title: "Oops!",
-                    text: "Item is required.",
-                    icon: "error",
-                    button: "OK",
-                });
-                return false;
-            }
-
-
-            $.ajax({
-                url: "{{ route('invoices.store') }}",
-                method: 'POST',
-                data: {
-                    // data: JSON.stringify(data),
-                    data:   (data),
-                    'userid': $('.username').val(),
-                    'date': $('.date').val()
-                },
-                success: function(response) {
-                    let sw = swal({
-                        title: "Success!",
-                        text: "Data stored successfully!",
-                        icon: "success",
-                        button: "OK",
-                    });
-                    sw.then((result) => {
-                        if (result == true) {
-                            window.location.reload();
-                        }
-                    }).catch((error) => {
-                        console.error(error);
+                    // Push the ID and quantity as an object to the 'data' array
+                    data.push({
+                        id: id,
+                        quantity: quantity
                     });
 
+                    return true; // Continue iteration to the next row
+                });
 
-                },
-                error: function(response) {
-                    let errors = response.responseJSON;
-                    let errorString = '';
+                return data; // Return the collected data array
+            }
 
-                    $.each(errors, function(key, value) {
-                        errorString += value + '\n';
-                    });
+
+
+
+            $('#submitButton').click(function() {
+                let data = collectData();
+                // Check if date is not set or null
+                if (!$('.date').val()) {
                     swal({
-                        title: "Error!",
-                        text: errorString,
+                        title: "Oops!",
+                        text: "Date is required.",
                         icon: "error",
                         button: "OK",
                     });
+                    return false;
+                }
+                // Check if username is not set or null
+                if (!$('.username').val()) {
+
+                    swal({
+                        title: "Oops!",
+                        text: "Username is required.",
+                        icon: "error",
+                        button: "OK",
+                    });
+                    return false;
+                }
+
+
+                // Check if data is empty
+                if (!data || !data.length) {
+
+                    swal({
+                        title: "Oops!",
+                        text: "Item is required.",
+                        icon: "error",
+                        button: "OK",
+                    });
+                    return false;
+                }
+
+
+                $.ajax({
+                    url: "{{ route('invoices.store') }}",
+                    method: 'POST',
+                    data: {
+                        data: (data),
+                        'userid': $('.username').val(),
+                        'date': $('.date').val()
+                    },
+                    success: function(response) {
+                        let sw = swal({
+                            title: "Success!",
+                            text: "Data stored successfully!",
+                            icon: "success",
+                            button: "OK",
+                        });
+                        sw.then((result) => {
+                            if (result == true) {
+                                window.location.reload();
+                            }
+                        }).catch((error) => {
+                            console.error(error);
+                        });
+
+
+                    },
+                    error: function(response) {
+                        let errors = response.responseJSON;
+                        let errorString = '';
+
+                        $.each(errors, function(key, value) {
+                            errorString += value + '\n';
+                        });
+                        swal({
+                            title: "Error!",
+                            text: errorString,
+                            icon: "error",
+                            button: "OK",
+                        });
+                    }
+                });
+            });
+            // Attach an event listener to the parent element of the table
+            // Attach an event listener to the parent element of the table
+
+            // Attach an event listener to the parent element of the table
+
+
+            let isUpdating = false;
+
+            $('#itemsTable').on('change keyup', '.quantity', function(event) {
+                event.preventDefault();
+
+                if (!isUpdating) {
+                    isUpdating = true;
+
+                    handleChangeQuantity.bind(this)();
+                    updateSubTotal.bind(this);
+                    // Then update the final total
+                    updateFinalTotal();
+
+                    isUpdating = false;
                 }
             });
-        });
-        // Attach an event listener to the parent element of the table
-        // Attach an event listener to the parent element of the table
-        $('#itemsTable').on('change', '.quantity', function() {
-            // Get the current row
-            let row = $(this).closest('tr');
 
-            // Get the current value of the quantity input field
-            let quantity = $(this).val();
-            let itemid = $(this).attr('data-id');
-            let price = parseFloat($(this).attr('data-price'));
+            function handleChangeQuantity() {
+                // Use event.target instead of this
+                let input = $(this);
 
-            // Create a new quantity input field with the updated value
-            let quantityInput =
-                `<input type="number" class="quantity"  min="1" step="1"  value="${quantity}" data-id="${itemid}" data-price="${price}">`;
+                // Get the current row
+                let row = input.closest('tr');
 
-            // Update the cell in the DataTable
-            table.cell(row, 2).data(quantityInput).draw();
+                // Get the current value of the quantity input field
+                let quantity = parseInt(input.val());
+                let itemid = input.attr('data-id');
+                let price = parseFloat(input.attr('data-price'));
 
-            // Calculate the new subtotal based on the updated quantity
-            let subtotal = (price * quantity).toFixed(2);
+                // Check if the quantity not <=0
+                if (quantity <= 0) {
+                    // set quantity to 1
+                    quantity = 1;
+                    input.val(quantity);
+                }
+                // Rest of your code...
 
-            // Create a new subtotal span with the updated subtotal
-            let subtotalSpan =
-                `<span class='subtotal' data-id='${itemid}' data-price='${price}'>${subtotal}</span>`;
+                // Only update the DataTable if the cell still exists
+                let cell2 = table.cell(row, 2);
+                let cell4 = table.cell(row, 4);
 
-            // Update the subtotal cell in the DataTable
-            table.cell(row, 4).data(subtotalSpan).draw();
+                if (cell2.node() && cell4.node()) {
+                    // Create a new quantity input field with the updated value
+                    let quantityInput =
+                        `<input type="number" class="quantity" min="1" step="1" value="${quantity}" data-id="${itemid}" data-price="${price}">`;
 
-            // Then update the final total
-            updateFinalTotal();
+                    // Calculate the new subtotal based on the updated quantity
+                    let subtotal = (price * quantity).toFixed(2);
+
+                    // Create a new subtotal span with the updated subtotal
+                    let subtotalSpan =
+                        `<span class='subtotal' data-id='${itemid}' data-price='${price}'>${subtotal}</span>`;
+
+                    // Update the cells in the DataTable
+                    cell2.data(quantityInput);
+                    cell4.data(subtotalSpan);
+
+                    // Draw the DataTable only once
+                    table.draw();
+                }
+
+                // Then update the final total
+                // updateFinalTotal();
+            }
         });
     </script>
 @endpush

@@ -8,6 +8,6 @@ class ItemTranslation extends Model
 {
  
     protected $table = "item_translations";
-   
+    public $timestamps = true;
    
 }

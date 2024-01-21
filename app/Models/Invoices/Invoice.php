@@ -11,4 +11,6 @@ class Invoice   extends Model
 
  
     protected $guarded = [];
+
+    public $timestamps = true;
 }

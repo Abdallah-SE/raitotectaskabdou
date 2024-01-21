@@ -8,6 +8,7 @@ class UserTranslation   extends Model
  
  
     protected $table = "users_translations";
+    public $timestamps = true;
     /**
      * The attributes that are mass assignable.
      *
