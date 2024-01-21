@@ -16,6 +16,13 @@ These instructions will get you a copy of the project up and running on your loc
 Clone the repository:
 Run Migration or go to database folder and import the db
 
+### Resetting the Database
+- php artisan migrate:fresh
+
+If you want to seed your database after running the migrations, you can use the --seed option:
+
+- php artisan migrate:fresh --seed
+
 #### Seeding Individual Tables
 
 You can seed individual tables by running the corresponding seeder class. Here are the commands to seed the `Languages`, `Users`, and `Items` tables:

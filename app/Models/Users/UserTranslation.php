@@ -15,10 +15,7 @@ class UserTranslation   extends Model
      * @var array<int, string>
      */
     
-    protected $fillable = [
-        'name',
-     ];
-
+     protected $guarded = [];
   
      public function user(){
         return $this->belongsTo(User::class);

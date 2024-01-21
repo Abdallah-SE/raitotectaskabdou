@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Languages\Language;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Users\UserTranslation;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class UsersTableSeeder extends Seeder
@@ -40,7 +41,7 @@ class UsersTableSeeder extends Seeder
 
             $languages = Language::all();
             foreach ($languages as $language) {
-                DB::table('users_translations')->insert([
+                UserTranslation::create([
                     'user_id' => $user->id,
                     'language_id' => $language->id,
                     'name' => Str::random(5) . '_' . $language->code . " " . $language->code ,

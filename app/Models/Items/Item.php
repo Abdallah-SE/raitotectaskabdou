@@ -11,7 +11,7 @@ class Item   extends Model
     use HasFactory;
 
     protected $table = "items";
-
+    protected $guarded = [];
     public $timestamps = true;
 
     public function translations()

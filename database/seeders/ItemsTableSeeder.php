@@ -3,10 +3,11 @@
 namespace Database\Seeders;
 
 use App\Models\Items\Item;
-use App\Models\Languages\Language;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Database\Seeder;
+use App\Models\Languages\Language;
+use Illuminate\Support\Facades\DB;
+use App\Models\Items\ItemTranslation;
 
 class ItemsTableSeeder extends Seeder
 {
@@ -32,7 +33,7 @@ class ItemsTableSeeder extends Seeder
 
             $languages = Language::all();
             foreach ($languages as $language) {
-                DB::table('item_translations')->insert([
+                ItemTranslation::create([
                     'item_id' => $item->id,
                     'language_id' => $language->id,
                     'name' => Str::random(7) . " " . $language->code,

@@ -9,6 +9,6 @@ class Language   extends Model
 
 
    protected $table = "languages";
-
+   protected $guarded = [];
    public $timestamps = true;
 }
