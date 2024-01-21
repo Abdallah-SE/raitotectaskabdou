@@ -16,4 +16,11 @@ These instructions will get you a copy of the project up and running on your loc
 Clone the repository:
 Run Migration or go to database folder and import the db
 
+run this : 
+- php artisan db:seed --class=LanguagesTableSeeder
+- php artisan db:seed --class=UsersTableSeeder
+- php artisan db:seed --class=ItemsTableSeeder
+
+
+
 
