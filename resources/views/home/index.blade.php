@@ -3,24 +3,26 @@
 @section('title', 'Home Page')
 
 @section('content')
-    <h1>Welcome to the Home Page!</h1>
-     <div class="container">
-        <div class="col-md-12 d-flex">
-            <div class="col-md-4">
+    <h1 class="text-center mt-5 mb-5">{{ __('home.welcome') }}</h1>
+    <div class="container text-center mt-5 mb-5" >
+        <div class="row   mt-5 mb-5" >
+            <div class="col-4 mb-3">
                 <a class="btn btn-success" href="{{ route('users.index') }}">
-                    Show Users
+                    {{ __('home.Show Users') }}
                 </a>
             </div>
-            <div class="col-md-4">
+            <div class="col-4 mb-3">
                 <a class="btn btn-success" href="{{ route('items.index') }}">
-                    Show Items
+                    {{ __('home.Show Items') }}
                 </a>
             </div>
-            <div class="col-md-4">
+            <div class="col-4 mb-3">
                 <a class="btn btn-success" href="{{ route('invoices.create') }}">
-                    Create Invoice
+                    
+                    {{ __('home.Create Invoice') }}
                 </a>
             </div>
         </div>
-     </div>
+    </div>
 @endsection
+

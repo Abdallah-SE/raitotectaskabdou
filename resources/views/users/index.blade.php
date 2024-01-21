@@ -5,9 +5,9 @@
     <table id="userstable" class="display" style="width:100%">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <!-- Add other columns as needed -->
+                <th>{{ __('users.ID')}}</th>
+                <th>{{ __('users.Name')}}</th>
+                 <!-- Add other columns as needed -->
             </tr>
         </thead>
     </table>

@@ -9,7 +9,7 @@
 
             <div class="col-sm-12 col-md-6">
                 <div class="form-group mb-5 mr-5">
-                    <label class="d-block">Select date</label>
+                    <label class="d-block">{{ __('invoice.Select date') }}</label>
 
                     <input type="text" class="datepicker date form-control" name="date" id="date">
                 </div>
@@ -19,7 +19,7 @@
 
             <div class="col-sm-12 col-md-6">
                 <div class="form-group mb-5">
-                    <label>Select customer name</label>
+                    <label>{{ __('invoice.Select customer name') }}</label>
                     <select id="username" class="username form-control">
 
                     </select>
@@ -30,7 +30,7 @@
 
             <div class="col-sm-12 col-md-6">
                 <div class="form-group">
-                    <label>Select items</label>
+                    <label>{{ __('invoice.Select items') }}</label>
                     <select id="multipleitems" class="multipleitems form-control" multiple>
 
                     </select>
@@ -41,10 +41,10 @@
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Total</th>
+                            <th scope="col">{{ __('invoice.Name') }}</th>
+                            <th scope="col">{{ __('invoice.Quantity') }}</th>
+                            <th scope="col">{{ __('invoice.Price') }}</th>
+                            <th scope="col">{{ __('invoice.Sub Total') }}</th>
                         </tr>
                     </thead>
                 </table>
@@ -57,7 +57,7 @@
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Total</th>
+                            <th scope="col">{{ __('invoice.Total') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -73,7 +73,7 @@
 
             <div class="col-sm-12  col-md-6 d-flex m-5">
                 <div></div>
-                <button class="btn btn-info" id="submitButton" type="button">Submit</button>
+                <button class="btn btn-info" id="submitButton" type="button">{{ __('invoice.Submit') }}</button>
 
             </div>
         </div>

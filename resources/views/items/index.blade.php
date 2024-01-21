@@ -5,8 +5,9 @@
     <table id="itemstable" class="display" style="width:100%">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Name</th>
+                <th>{{ __('items.ID') }}</th>
+                <th>{{ __('items.Name') }}</th>
+               
                 <!-- Add other columns as needed -->
             </tr>
         </thead>
