@@ -16,11 +16,21 @@ These instructions will get you a copy of the project up and running on your loc
 Clone the repository:
 Run Migration or go to database folder and import the db
 
-run this : 
+#### Seeding Individual Tables
+
+You can seed individual tables by running the corresponding seeder class. Here are the commands to seed the `Languages`, `Users`, and `Items` tables:
+
 - php artisan db:seed --class=LanguagesTableSeeder
 - php artisan db:seed --class=UsersTableSeeder
 - php artisan db:seed --class=ItemsTableSeeder
 
+#### Seeding All Tables
 
+Alternatively, you can seed all tables at once by running the `db:seed` command without specifying a seeder class. This will run all registered seeders:
 
+- php artisan db:seed
 
+Please note that if you want to force seeders to run in production, you can use the `--force` flag:
+
+- php artisan db:seed --force
+ 
