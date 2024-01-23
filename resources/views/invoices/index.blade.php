@@ -287,11 +287,12 @@
 
             $('#submitButton').click(function() {
                 let data = collectData();
-                // Check if date is not set or null
+                // Check if date is not set or null  
+
                 if (!$('.date').val()) {
                     swal({
                         title: "Oops!",
-                        text: "Date is required.",
+                        text: "{{ __('invoice.Date is required!') }}",
                         icon: "error",
                         button: "OK",
                     });
@@ -302,7 +303,7 @@
 
                     swal({
                         title: "Oops!",
-                        text: "Username is required.",
+                        text: "{{ __('invoice.User ID is required!') }}",
                         icon: "error",
                         button: "OK",
                     });
@@ -315,7 +316,7 @@
 
                     swal({
                         title: "Oops!",
-                        text: "Item is required.",
+                        text: "{{ __('invoice.Data is required!') }}",
                         icon: "error",
                         button: "OK",
                     });
@@ -332,9 +333,18 @@
                         'date': $('.date').val()
                     },
                     success: function(response) {
+                        if (response == 'error') {
+                            let sw = swal({
+                                title: "Error!",
+                                text: "{{ __('invoice.Data not stored!') }}",
+                                icon: "error",
+                                button: "OK",
+                            });
+                            return false;
+                        }
                         let sw = swal({
                             title: "Success!",
-                            text: "Data stored successfully!",
+                            text: "{{ __('invoice.Data stored successfully!') }}",
                             icon: "success",
                             button: "OK",
                         });
@@ -349,6 +359,7 @@
 
                     },
                     error: function(response) {
+
                         let errors = response.responseJSON;
                         let errorString = '';
 
