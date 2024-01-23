@@ -20,17 +20,17 @@ class UsersTableSeeder extends Seeder
     {
         $users = [
             [
-                'email' => 'user1@example.com',
+                'email' => Str::random(3) . 'user1@example.com',
                 'password' => Hash::make('password1'),
                 'remember_token' => Str::random(10),
             ],
             [
-                'email' => 'user2@example.com',
+                'email' =>  Str::random(3) . 'user2@example.com',
                 'password' => Hash::make('password2'),
                 'remember_token' => Str::random(10),
             ],
             [
-                'email' => 'user3@example.com',
+                'email' =>  Str::random(3) . 'user3@example.com',
                 'password' => Hash::make('password3'),
                 'remember_token' => Str::random(10),
             ],

@@ -376,12 +376,8 @@
                 });
             });
             // Attach an event listener to the parent element of the table
-            // Attach an event listener to the parent element of the table
 
-            // Attach an event listener to the parent element of the table
-
-
-            let isUpdating = false;
+            let isUpdating = false; // to not dubpicate changes on same row with quantity
 
             $('#itemsTable').on('change keyup', '.quantity', function(event) {
                 event.preventDefault();
@@ -399,10 +395,10 @@
             });
 
             function handleChangeQuantity() {
-                // Use event.target instead of this
+                // reference cureent element
                 let input = $(this);
 
-                // Get the current row
+                // Get the current row is finding the closest ancestor of the current element that is a <tr> element. The .closest() method begins with the current element and travels up the DOM tree, 
                 let row = input.closest('tr');
 
                 // Get the current value of the quantity input field
@@ -416,7 +412,6 @@
                     quantity = 1;
                     input.val(quantity);
                 }
-                // Rest of your code...
 
                 // Only update the DataTable if the cell still exists
                 let cell2 = table.cell(row, 2);
@@ -442,8 +437,7 @@
                     table.draw();
                 }
 
-                // Then update the final total
-                // updateFinalTotal();
+
             }
         });
     </script>
